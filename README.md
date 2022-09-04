@@ -49,7 +49,7 @@ ___
 
 + Система крафта: 
   + При наличии необходимых ресурсов в инвентаре, можно создавать предметы. 
-  ![moving](ReadmeFiles/Picture/crafPanel.png) 
+  ![moving](ReadmeFiles/Picture/CrafPanel.png) 
   + На каждый предмет заложено свое время создания. 
 
 
