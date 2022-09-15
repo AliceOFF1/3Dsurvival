@@ -9,7 +9,7 @@ public class CustomCharacterController : MonoBehaviour
     public Animator anim;
     public Rigidbody rig;
     public Transform mainCamera;
-    public float jumpForce = 3.5f; 
+    public float jumpForce = 3.5f;
     public float walkingSpeed = 2f;
     public float runningSpeed = 6f;
     public float currentSpeed;
@@ -25,11 +25,11 @@ public class CustomCharacterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Прекрепляем курсор к середине экрана
+        // Move the cursor to the middle of the screen
         Cursor.lockState = CursorLockMode.Locked;
-        // и делаем его невидимым
+        // make it invisible
         Cursor.visible = false;
-        
+
     }
     void Run()
     {
@@ -41,8 +41,7 @@ public class CustomCharacterController : MonoBehaviour
     }
     void Walk()
     {
-        // Mathf.Lerp - отвчает за то, чтобы каждый кадр число animationInterpolation(в данном случае) приближалось к числу 1 со скоростью Time.deltaTime * 3.
-        // Time.deltaTime - это время между этим кадром и предыдущим кадром. Это позволяет плавно переходить с одного числа до второго НЕЗАВИСИМО ОТ КАДРОВ В СЕКУНДУ (FPS)!!!
+        // Mathf.Lerp - is responsible for ensuring that each frame the animationInterpolation number (in this case) approaches the number 1 at the rate of Time.deltaTime * 3.
         animationInterpolation = Mathf.Lerp(animationInterpolation, 1f, Time.deltaTime * 3);
         anim.SetFloat("x", Input.GetAxis("Horizontal") * animationInterpolation);
         anim.SetFloat("y", Input.GetAxis("Vertical") * animationInterpolation);
@@ -58,7 +57,7 @@ public class CustomCharacterController : MonoBehaviour
     IEnumerator SmoothLayerWeightChange(float oldWeight, float newWeight, float changeDuration)
     {
         float elapsed = 0f;
-        while(elapsed < changeDuration)
+        while (elapsed < changeDuration)
         {
             float currentWeight = Mathf.Lerp(oldWeight, newWeight, elapsed / changeDuration);
             anim.SetLayerWeight(1, currentWeight);
@@ -70,10 +69,10 @@ public class CustomCharacterController : MonoBehaviour
 
     private void Update()
     {
-   
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if(quickslotInventory.activeSlot != null)
+            if (quickslotInventory.activeSlot != null)
             {
                 if (quickslotInventory.activeSlot.item != null)
                 {
@@ -91,31 +90,28 @@ public class CustomCharacterController : MonoBehaviour
         {
             anim.SetBool("Hit", false);
         }
-       
-        // Устанавливаем поворот персонажа когда камера поворачивается 
-        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x,mainCamera.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-        
-        // Зажаты ли кнопки W и Shift?
-        if(Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
+
+        // Set the rotation of the character when the camera rotates
+        transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, mainCamera.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
-            // Зажаты ли еще кнопки A S D?
+
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
             {
-                // Если да, то мы идем пешком
                 Walk();
             }
-            // Если нет, то тогда бежим!
             else
             {
                 Run();
             }
         }
-        // Если W & Shift не зажаты, то мы просто идем пешком
         else
         {
             Walk();
         }
-        //Если зажат пробел, то в аниматоре отправляем сообщение тригеру, который активирует анимацию прыжка
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             anim.SetTrigger("Jump");
@@ -130,32 +126,27 @@ public class CustomCharacterController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Здесь мы задаем движение персонажа в зависимости от направления в которое смотрит камера
-        // Сохраняем направление вперед и вправо от камеры 
+        // set the movement of the character depending on the direction in which the camera is looking.
+        // Keeping the direction forward and to the right of the camera
         Vector3 camF = mainCamera.forward;
         Vector3 camR = mainCamera.right;
-        // Чтобы направления вперед и вправо не зависили от того смотрит ли камера вверх или вниз, иначе когда мы смотрим вперед, персонаж будет идти быстрее чем когда смотрит вверх или вниз
-        // Можете сами проверить что будет убрав camF.y = 0 и camR.y = 0 :)
+        // So that the forward and right directions do not depend on whether the camera is looking up or down, otherwise when we look forward, the character will go faster than when looking up or down
         camF.y = 0;
         camR.y = 0;
         Vector3 movingVector;
-        // Тут мы умножаем наше нажатие на кнопки W & S на направление камеры вперед и прибавляем к нажатиям на кнопки A & D и умножаем на направление камеры вправо
-        movingVector = Vector3.ClampMagnitude(camF.normalized * Input.GetAxis("Vertical") * currentSpeed + camR.normalized * Input.GetAxis("Horizontal") * currentSpeed,currentSpeed);
-        // Magnitude - это длинна вектора. я делю длинну на currentSpeed так как мы умножаем этот вектор на currentSpeed на 86 строке. Я хочу получить число максимум 1.
-        anim.SetFloat("magnitude", movingVector.magnitude/currentSpeed);
-        // Здесь мы двигаем персонажа! Устанавливаем движение только по x & z потому что мы не хотим чтобы наш персонаж взлетал в воздух
-        rig.velocity = new Vector3(movingVector.x, rig.velocity.y,movingVector.z);
-        // У меня был баг, что персонаж крутился на месте и это исправил с помощью этой строки
+        // multiply our pressing of the W & S buttons by the direction of the camera forward and add to the pressing of the A & D buttons and multiply by the direction of the camera to the right
+        movingVector = Vector3.ClampMagnitude(camF.normalized * Input.GetAxis("Vertical") * currentSpeed + camR.normalized * Input.GetAxis("Horizontal") * currentSpeed, currentSpeed);
+        anim.SetFloat("magnitude", movingVector.magnitude / currentSpeed);
+        rig.velocity = new Vector3(movingVector.x, rig.velocity.y, movingVector.z);
         rig.angularVelocity = Vector3.zero;
     }
     public void Jump()
     {
-        // Выполняем прыжок по команде анимации.
         rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
     public void Hit()
     {
-        foreach(Transform item in quickslotInventory.allWeapons)
+        foreach (Transform item in quickslotInventory.allWeapons)
         {
             if (item.gameObject.activeSelf)
             {
@@ -166,7 +157,7 @@ public class CustomCharacterController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == 4)
+        if (other.gameObject.layer == 4)
         {
             indicators.isInWater = true;
         }

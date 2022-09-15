@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class QuickslotInventory : MonoBehaviour
 {
-    // Объект у которого дети являются слотами
     public Transform quickslotParent;
     public InventoryManager inventoryManager;
     public int currentQuickslotID = 0;
@@ -21,67 +20,70 @@ public class QuickslotInventory : MonoBehaviour
     void Update()
     {
         float mw = Input.GetAxis("Mouse ScrollWheel");
-        // Используем колесико мышки
+        // Using the mouse wheel
+
         if (mw > 0.1)
         {
-            // Берем предыдущий слот и меняем его картинку на обычную
+            // take the previous slot and change its picture to the usual one
 
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = notSelectedSprite;
-            // Здесь добавляем что случится когда мы УБЕРАЕМ ВЫДЕЛЕНИЕ со слота (Выключить нужный нам предмет, поменять аниматор ...)
+            // Here we add what happens when we REMOVE SELECTION from the slot (Turn off the item we need, change the animator ...)
 
-            // Если крутим колесиком мышки вперед и наше число currentQuickslotID равно последнему слоту, то выбираем наш первый слот (первый слот считается нулевым)
+            // If we turn the mouse wheel forward and our currentQuickslotID number is equal to the last slot, then we select our first slot (the first slot is considered zero)
             if (currentQuickslotID >= quickslotParent.childCount - 1)
             {
                 currentQuickslotID = 0;
             }
             else
             {
-                // Прибавляем к числу currentQuickslotID единичку
+                // add one to the number of currentQuickslotID
                 currentQuickslotID++;
             }
-            // Берем предыдущий слот и меняем его картинку на "выбранную"
-
+            // take the previous slot and change its picture to the "selected" one
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
             activeSlot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
             ShowItemInHand();
-            // Здесь добавляем что случится когда мы ВЫДЕЛЯЕМ слот (Включить нужный нам предмет, поменять аниматор ...)
+            // add what happens when we SELECT the slot (Enable the item we need, change the animator ...)
+
 
         }
         if (mw < -0.1)
         {
-            // Берем предыдущий слот и меняем его картинку на обычную
+            // take the previous slot and change its picture to the usual one
 
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = notSelectedSprite;
-            // Здесь добавляем что случится когда мы УБЕРАЕМ ВЫДЕЛЕНИЕ со слота (Выключить нужный нам предмет, поменять аниматор ...)
+            // add what happens when we REMOVE SELECTION from the slot (Turn off the item we need, change the animator ...)
 
 
-            // Если крутим колесиком мышки назад и наше число currentQuickslotID равно 0, то выбираем наш последний слот
+            // If we turn the mouse wheel back and our currentQuickslotID number is 0, then we select our last slot
             if (currentQuickslotID <= 0)
             {
                 currentQuickslotID = quickslotParent.childCount - 1;
             }
             else
             {
-                // Уменьшаем число currentQuickslotID на 1
+                // Decrement the number of currentQuickslotID by 1
                 currentQuickslotID--;
             }
-            // Берем предыдущий слот и меняем его картинку на "выбранную"
+            // We take the previous slot and change its picture to the "selected" one
 
             quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
             activeSlot = quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>();
             ShowItemInHand();
-            // Здесь добавляем что случится когда мы ВЫДЕЛЯЕМ слот (Включить нужный нам предмет, поменять аниматор ...)
+            // add what happens when we SELECT the slot (Enable the item we need, change the animator ...)
 
         }
-        // Используем цифры
+        // Using numbers
+
         for (int i = 0; i < quickslotParent.childCount; i++)
         {
-            // если мы нажимаем на клавиши 1 по 5 то...
-            if (Input.GetKeyDown((i + 1).ToString())) {
-                // проверяем если наш выбранный слот равен слоту который у нас уже выбран, то
+            // if we press keys 1 to 5 then...
+            if (Input.GetKeyDown((i + 1).ToString()))
+            {
+                // check if our selected slot is equal to the slot that we already have selected, then
                 if (currentQuickslotID == i)
                 {
-                    // Ставим картинку "selected" на слот если он "not selected" или наоборот
+                    // put the picture "selected" on the slot if it is "not selected" or vice versa
                     if (quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == notSelectedSprite)
                     {
                         quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = selectedSprite;
@@ -98,7 +100,7 @@ public class QuickslotInventory : MonoBehaviour
 
                     }
                 }
-                // Иначе мы убираем свечение с предыдущего слота и светим слот который мы выбираем
+                // Otherwise, we remove the glow from the previous slot and shine the slot that we select
                 else
                 {
                     quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite = notSelectedSprite;
@@ -111,14 +113,14 @@ public class QuickslotInventory : MonoBehaviour
                 }
             }
         }
-        // Используем предмет по нажатию на левую кнопку мыши
+        // Use the item by pressing the left mouse button
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().item != null)
             {
                 if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().item.isConsumeable && !inventoryManager.isOpened && quickslotParent.GetChild(currentQuickslotID).GetComponent<Image>().sprite == selectedSprite)
                 {
-                    // Применяем изменения к здоровью (будущем к голоду и жажде) 
+                    // Apply changes to health, hunger, thirst 
                     ChangeCharacteristics();
 
                     if (quickslotParent.GetChild(currentQuickslotID).GetComponent<InventorySlot>().amount <= 1)

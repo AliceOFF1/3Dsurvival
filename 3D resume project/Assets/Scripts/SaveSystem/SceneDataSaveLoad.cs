@@ -20,7 +20,7 @@ public class SceneDataSaveLoad : MonoBehaviour
         SceneData data = BinarySavingSystem.LoadScene();
         for (int i = 0; i < data.objectNames.Length; i++)
         {
-            
+
             var prefabName = GetPrefabName(data, i);
 
             GameObject goToSpawn = Resources.Load<GameObject>($"ItemPrefabs/{prefabName}");
@@ -38,7 +38,7 @@ public class SceneDataSaveLoad : MonoBehaviour
         {
             int whitespaceIndex = data.objectNames[i].IndexOf(" ");
             int length = data.objectNames[i].Length;
-            prefabName = data.objectNames[i].Remove(whitespaceIndex, data.objectNames[i].Length-whitespaceIndex);
+            prefabName = data.objectNames[i].Remove(whitespaceIndex, data.objectNames[i].Length - whitespaceIndex);
         }
         else
         {

@@ -44,7 +44,7 @@ public class CraftManager : MonoBehaviour
     }
     public void FillItemDetailsHelper()
     {
-       currentCraftItem.FillItemDetails();
+        currentCraftItem.FillItemDetails();
     }
     // Update is called once per frame
     void Update()
@@ -65,9 +65,9 @@ public class CraftManager : MonoBehaviour
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisName = "";
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisValue = 0;
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisValue = 0;
-                // Прекрепляем курсор к середине экрана
+                // Move the cursor to the middle of the screen
                 Cursor.lockState = CursorLockMode.None;
-                // и делаем его невидимым
+                // and make it invisible
                 Cursor.visible = true;
             }
             else
@@ -78,14 +78,14 @@ public class CraftManager : MonoBehaviour
 
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisName = "Mouse X";
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisName = "Mouse Y";
-                // Прекрепляем курсор к середине экрана
+                // Move the cursor to the middle of the screen
                 Cursor.lockState = CursorLockMode.Locked;
-                // и делаем его невидимым
-                Cursor.visible = false;   
+                // and make it invisible
+                Cursor.visible = false;
             }
-            
+
         }
-       
+
     }
 
     public void LoadCraftItems(string craftType)

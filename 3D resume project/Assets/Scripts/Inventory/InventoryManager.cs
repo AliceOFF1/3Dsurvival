@@ -17,7 +17,7 @@ public class InventoryManager : MonoBehaviour
     public float reachDistance = 3f;
     private Camera mainCamera;
     public CinemachineVirtualCamera CVC;
-    private CraftManager craftManager; 
+    private CraftManager craftManager;
     [SerializeField] private Transform player;
     // Start is called before the first frame update
     private void Awake()
@@ -30,7 +30,7 @@ public class InventoryManager : MonoBehaviour
         craftManager = FindObjectOfType<CraftManager>();
         for (int i = 0; i < inventoryPanel.childCount; i++)
         {
-            if(inventoryPanel.GetChild(i).GetComponent<InventorySlot>() != null)
+            if (inventoryPanel.GetChild(i).GetComponent<InventorySlot>() != null)
             {
                 slots.Add(inventoryPanel.GetChild(i).GetComponent<InventorySlot>());
             }
@@ -64,9 +64,10 @@ public class InventoryManager : MonoBehaviour
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisName = "";
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisValue = 0;
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisValue = 0;
-                // Прекрепляем курсор к середине экрана
+                // Move the cursor to the middle of the screen
                 Cursor.lockState = CursorLockMode.None;
-                // и делаем его невидимым
+                // and make it invisible
+
                 Cursor.visible = true;
             }
             else
@@ -76,17 +77,18 @@ public class InventoryManager : MonoBehaviour
                 crosshair.SetActive(true);
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisName = "Mouse X";
                 CVC.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_InputAxisName = "Mouse Y";
-                // Прекрепляем курсор к середине экрана
+                // Move the cursor to the middle of the screen
                 Cursor.lockState = CursorLockMode.Locked;
-                // и делаем его невидимым
+                // and make it invisible
+
                 Cursor.visible = false;
 
                 DragAndDropItem[] dadi = FindObjectsOfType<DragAndDropItem>();
-                foreach(DragAndDropItem slot in dadi)
+                foreach (DragAndDropItem slot in dadi)
                 {
                     slot.ReturnBackToSlot();
                 }
-                
+
             }
         }
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -111,8 +113,8 @@ public class InventoryManager : MonoBehaviour
         InventorySlot slot = slots[slotId];
 
         slot.item = null;
-        slot.isEmpty = true; 
-        slot.amount = 0;  
+        slot.isEmpty = true;
+        slot.amount = 0;
         slot.iconGO.GetComponent<Image>().color = new Color(1, 1, 1, 0);
         slot.iconGO.GetComponent<Image>().sprite = null;
         slot.itemAmountText.text = "";
@@ -121,24 +123,24 @@ public class InventoryManager : MonoBehaviour
 
     public void AddItemToSlot(ItemScriptableObject _item, int _amount, int slotId)
     {
-        InventorySlot slot = slots [slotId];
-        slot.item = _item; 
-        slot.isEmpty = false; 
-        slot.SetIcon(_item.icon); 
+        InventorySlot slot = slots[slotId];
+        slot.item = _item;
+        slot.isEmpty = false;
+        slot.SetIcon(_item.icon);
 
-        if(_amount <= _item.maximumAmount)
+        if (_amount <= _item.maximumAmount)
         {
-            slot.amount = _amount; 
-            if (slot.item.maximumAmount != 1) 
+            slot.amount = _amount;
+            if (slot.item.maximumAmount != 1)
             {
                 slot.itemAmountText.text = slot.amount.ToString();
             }
         }
         else
         {
-            slot.amount = _item.maximumAmount; 
-            _amount -= _item.maximumAmount; 
-            if (slot.item.maximumAmount != 1) 
+            slot.amount = _item.maximumAmount;
+            _amount -= _item.maximumAmount;
+            if (slot.item.maximumAmount != 1)
             {
                 slot.itemAmountText.text = slot.amount.ToString();
             }
@@ -146,96 +148,96 @@ public class InventoryManager : MonoBehaviour
     }
 
     public void AddItem(ItemScriptableObject _item, int _amount)
-    {  
+    {
         bool allFull = true;
-        foreach (InventorySlot InventorySlot in slots) 
+        foreach (InventorySlot InventorySlot in slots)
         {
-            if (InventorySlot.isEmpty) 
+            if (InventorySlot.isEmpty)
             {
-                allFull = false; 
+                allFull = false;
                 break;
-            } 
+            }
 
         }
 
-        if(allFull)
+        if (allFull)
         {
             GameObject itemObject = Instantiate(_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
             itemObject.GetComponent<Item>().amount = _amount;
         }
 
-    	int amount = _amount;
+        int amount = _amount;
         foreach (InventorySlot slot in slots)
         {
-            // Стакаем предметы вместе
-            // В слоте уже имеется этот предмет
+            // Stacking items together
+            // This item is already in the slot
             if (slot.item == _item)
             {
-                if (slot.amount + amount <= _item.maximumAmount) 
+                if (slot.amount + amount <= _item.maximumAmount)
                 {
                     slot.amount += amount;
                     slot.itemAmountText.text = slot.amount.ToString();
                     return;
                 }
-                else 
+                else
                 {
-                	amount -= _item.maximumAmount - slot.amount;
-                	slot.amount = _item.maximumAmount; 
-                	slot.itemAmountText.text = slot.amount.ToString();
+                    amount -= _item.maximumAmount - slot.amount;
+                    slot.amount = _item.maximumAmount;
+                    slot.itemAmountText.text = slot.amount.ToString();
                 }
                 continue;
             }
         }
         foreach (InventorySlot slot in slots)
         {
-             
-        	if (amount <= 0)
-        		return;
-            // добавляем предметы в свободные ячейки
-            if(slot.isEmpty == true)
-            { 
-            	slot.item = _item;
+
+            if (amount <= 0)
+                return;
+            // add items to free cells
+            if (slot.isEmpty == true)
+            {
+                slot.item = _item;
                 //slot.amount = amount;
                 slot.isEmpty = false;
                 slot.SetIcon(_item.icon);
-                	
+
                 if (amount <= _item.maximumAmount) // added this if statement for single items
                 {
-                	slot.amount = amount;
-                    if (slot.item.maximumAmount !=1) 
+                    slot.amount = amount;
+                    if (slot.item.maximumAmount != 1)
                     {
                         slot.itemAmountText.text = slot.amount.ToString();
                     }
-                	break;
-                } 
-            	else 
-            	{
+                    break;
+                }
+                else
+                {
 
-                   slot.amount = _item.maximumAmount;
-            	   amount -= _item.maximumAmount;
-            	   if (slot.item.maximumAmount != 1)
-            	   {
-            		  slot.itemAmountText.text = slot.amount.ToString();
-            	   }
+                    slot.amount = _item.maximumAmount;
+                    amount -= _item.maximumAmount;
+                    if (slot.item.maximumAmount != 1)
+                    {
+                        slot.itemAmountText.text = slot.amount.ToString();
+                    }
 
                 }
                 allFull = true;
-                foreach (InventorySlot InventorySlot in slots) 
+                foreach (InventorySlot InventorySlot in slots)
                 {
-                    if (InventorySlot.isEmpty) 
+                    if (InventorySlot.isEmpty)
                     {
-                        allFull = false; 
+                        allFull = false;
                         break;
-                    }  
+                    }
                 }
 
-                if(allFull)
+                if (allFull)
                 {
                     GameObject itemObject = Instantiate(_item.itemPrefab, player.position + Vector3.up + player.forward, Quaternion.identity);
                     itemObject.GetComponent<Item>().amount = amount;
                     return;
                 }
-            	//continue          
+                //continue          
             }
         }
     }

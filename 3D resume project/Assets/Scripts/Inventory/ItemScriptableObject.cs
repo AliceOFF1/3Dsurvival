@@ -6,10 +6,10 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System.Security;
 
-public enum ItemType {Default,Food,Weapon,Instrument}
+public enum ItemType { Default, Food, Weapon, Instrument }
 public class ItemScriptableObject : ScriptableObject
 {
-    
+
     public string itemName;
     public int maximumAmount;
     public GameObject itemPrefab;

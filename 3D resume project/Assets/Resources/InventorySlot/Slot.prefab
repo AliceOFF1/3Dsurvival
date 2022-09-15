@@ -355,6 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   oldSlot: {fileID: 0}
+  _savingEnvironment: {fileID: 0}
 --- !u!114 &2898988285624880078
 MonoBehaviour:
   m_ObjectHideFlags: 0

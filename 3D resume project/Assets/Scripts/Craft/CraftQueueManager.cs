@@ -37,7 +37,7 @@ public class CraftQueueManager : MonoBehaviour
 
     public void AddToCraftQueue()
     {
-       
+
 
         foreach (CraftResource craftResource in currentCraftItem.craftResources)
         {
@@ -46,9 +46,9 @@ public class CraftQueueManager : MonoBehaviour
             {
                 if (amountToRemove <= 0)
                     continue;
-                if(slot.item == craftResource.craftObject)
+                if (slot.item == craftResource.craftObject)
                 {
-                    if(amountToRemove > slot.amount)
+                    if (amountToRemove > slot.amount)
                     {
                         amountToRemove -= slot.amount;
                         slot.GetComponentInChildren<DragAndDropItem>().NullifySlotData();
@@ -57,7 +57,7 @@ public class CraftQueueManager : MonoBehaviour
                     {
                         slot.amount -= amountToRemove;
                         amountToRemove = 0;
-                        if(slot.amount <= 0)
+                        if (slot.amount <= 0)
                         {
                             slot.GetComponentInChildren<DragAndDropItem>().NullifySlotData();
                         }
@@ -72,7 +72,7 @@ public class CraftQueueManager : MonoBehaviour
 
         for (int i = 0; i < transform.childCount; i++)
         {
-            if(transform.GetChild(i).GetComponent<CraftQueueItemDetails>().currentCraftItem == currentCraftItem)
+            if (transform.GetChild(i).GetComponent<CraftQueueItemDetails>().currentCraftItem == currentCraftItem)
             {
                 transform.GetChild(i).GetComponent<CraftQueueItemDetails>().craftAmount += int.Parse(craftAmountInputField.text);
                 transform.GetChild(i).GetComponent<CraftQueueItemDetails>().amountText.text = "X" + transform.GetChild(i).GetComponent<CraftQueueItemDetails>();

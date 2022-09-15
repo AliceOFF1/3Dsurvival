@@ -13,16 +13,16 @@ public class SceneData
         objectNames = new string[childCount];
         objectPositions = new Hector[childCount];
         objectAmounts = new int[childCount];
-        
+
         for (int i = 0; i < parentTransform.childCount; i++)
         {
             Transform currentObject = parentTransform.GetChild(i);
-            
+
             objectNames[i] = currentObject.name;
-            
+
             var position = currentObject.position;
             objectPositions[i] = new Hector(position.x, position.y, position.z);
-            
+
             objectAmounts[i] = currentObject.GetComponent<Item>().amount;
         }
     }

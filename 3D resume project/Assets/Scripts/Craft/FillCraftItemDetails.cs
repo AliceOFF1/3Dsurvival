@@ -22,7 +22,7 @@ public class FillCraftItemDetails : MonoBehaviour
     {
         craftManager.currentCraftItem = this;
         //for (int i = 0; i < GameObject.Find(craftInfoPanelName).transform.childCount; i++)
-        for(int i = 0; i < craftInfoPanelGO.transform.childCount; i++)
+        for (int i = 0; i < craftInfoPanelGO.transform.childCount; i++)
         {
             Destroy(craftInfoPanelGO.transform.GetChild(i).gameObject);
         }
@@ -43,18 +43,18 @@ public class FillCraftItemDetails : MonoBehaviour
             int totalAmount = currentCraftItem.craftResources[i].craftObjectAmount * int.Parse(craftQueueManager.craftAmountInputField.text);
             crd.totalText.text = totalAmount.ToString();
             int resourceAmount = 0;
-            foreach(InventorySlot slot in FindObjectsOfType<InventoryManager>()[0].slots)
+            foreach (InventorySlot slot in FindObjectsOfType<InventoryManager>()[0].slots)
             {
                 if (slot.isEmpty)
                     continue;
-                if(slot.item.itemName == currentCraftItem.craftResources[i].craftObject.itemName)
+                if (slot.item.itemName == currentCraftItem.craftResources[i].craftObject.itemName)
                 {
                     resourceAmount += slot.amount;
                 }
             }
             crd.haveText.text = resourceAmount.ToString();
 
-            if(resourceAmount < totalAmount)
+            if (resourceAmount < totalAmount)
             {
                 canCraft = false;
             }

@@ -47,7 +47,7 @@ public class Indicators : MonoBehaviour
             foodAmount -= 100 / secondsToEmptyFood * Time.deltaTime;
             uiFoodAmount = Mathf.Lerp(uiFoodAmount, foodAmount, Time.deltaTime * changeFactor);
             foodBar.fillAmount = uiFoodAmount / 100;
-            
+
         }
         else
         {
@@ -94,7 +94,7 @@ public class Indicators : MonoBehaviour
         if (waterAmount + changeValue > 100)
         {
             waterAmount = 100;
-            
+
         }
         else
         {

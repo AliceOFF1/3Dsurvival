@@ -29,7 +29,7 @@ public class CraftQueueItemDetails : MonoBehaviour
         {
             UpdateTime();
         }
-        
+
     }
 
     public void StartInvoke()
@@ -48,7 +48,7 @@ public class CraftQueueItemDetails : MonoBehaviour
             transform.parent.GetChild(1).GetComponent<CraftQueueItemDetails>().StartInvoke();
         Destroy(gameObject);
     }
-        void UpdateTime()
+    void UpdateTime()
     {
         amountText.text = "X" + craftAmount.ToString();
         craftTime--;
@@ -65,7 +65,8 @@ public class CraftQueueItemDetails : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else {
+        else
+        {
             int minutes = Mathf.FloorToInt(craftTime / 60);
             int seconds = craftTime - minutes * 60;
             timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
